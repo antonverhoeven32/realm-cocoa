@@ -106,7 +106,6 @@ class TestCase: XCTestCase {
     }
 
     func dispatchAsyncAndWait(block: () -> ()) {
-        let queue = DispatchQueue(label: "background")
         queue.async {
             autoreleasepool {
                 block()
@@ -115,8 +114,8 @@ class TestCase: XCTestCase {
         queue.sync { }
     }
 
-    func assertThrows<T>(_ block: @autoclosure(escaping)() -> T, _ message: String? = nil,
-                         named: String? = RLMExceptionName, fileName: String = #file, lineNumber: UInt = #line) {
+    func assertThrows<T>(_ block: @autoclosure(escaping)() -> T, named: String? = RLMExceptionName,
+                         _ message: String? = nil, fileName: String = #file, lineNumber: UInt = #line) {
         exceptionThrown = true
         RLMAssertThrowsWithName(self, { _ = block() }, named, message, fileName, lineNumber)
     }
@@ -183,6 +182,8 @@ func inMemoryRealm(inMememoryIdentifier: String) -> Realm {
 class TestCase: XCTestCase {
     var exceptionThrown = false
     var testDir: String! = nil
+
+    let queue = dispatch_queue_create("background", nil)
 
     func realmWithTestPath(configuration: Realm.Configuration = Realm.Configuration()) -> Realm {
         var configuration = configuration
@@ -254,7 +255,6 @@ class TestCase: XCTestCase {
     }
     
     func dispatchAsyncAndWait(block: dispatch_block_t) {
-        let queue = dispatch_queue_create("background", nil)
         dispatch_async(queue) {
             autoreleasepool {
                 block()

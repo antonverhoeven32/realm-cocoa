@@ -214,11 +214,7 @@ static BOOL encryptTests() {
 }
 
 - (void)dispatchAsyncAndWait:(dispatch_block_t)block {
-    dispatch_async(self.bgQueue, ^{
-        @autoreleasepool {
-            block();
-        }
-    });
+    [self dispatchAsync:block];
     dispatch_sync(self.bgQueue, ^{});
 }
 
