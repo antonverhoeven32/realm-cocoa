@@ -53,7 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
  remain pinned until this method is called or the object is deinitialized.
 
  @param error If an error occurs, upon return contains an `NSError` object that describes the problem.
-              If you are not interested in possible errors, pass in `NULL`.
+              If you are not interested in possible errors, pass in `NULL`. In the case of an error, the
+              handover is invalidated and cannot be imported again.
  
  @return A `RLMThreadImport` instance with the imported `objects` and their associated `realm`.
 
